@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Review Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background: #f2f2f2;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .result, .error {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background: #fff;
+            max-width: 600px;
+        }
+        .error {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Customer Review Sentiment Analysis</h1>
+    <form action="/analyze" method="post">
+        <textarea name="review" rows="8" placeholder="Enter your customer review here...">{{ review | default('') }}</textarea>
+        <br>
+        <button type="submit">Analyze Sentiment</button>
+    </form>
+
+    {% if error %}
+        <div class="error">
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
+
+    {% if bert_result %}
+    <div class="result">
+        <h2>Analysis Results</h2>
+        <p><strong>BERT Sentiment:</strong> {{ bert_result.label }} (Score: {{ '{:.2f}'.format(bert_result.score) }})</p>
+        <h3>VADER Breakdown:</h3>
+        <ul>
+            <li>Positive: {{ vader_result['pos'] }}</li>
+            <li>Neutral: {{ vader_result['neu'] }}</li>
+            <li>Negative: {{ vader_result['neg'] }}</li>
+            <li>Compound: {{ vader_result['compound'] }}</li>
+        </ul>
+    </div>
+    {% endif %}
+</body>
+</html>
